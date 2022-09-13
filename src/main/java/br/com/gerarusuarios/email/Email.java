@@ -25,7 +25,7 @@ public class Email {
 
         String usuarioEmail = System.getProperty("mail.username");
         String senhaEmail = System.getProperty("mail.pass");
-        System.out.println(usuarioEmail + " " + senhaEmail);
+//        System.out.println(usuarioEmail + " " + senhaEmail);
         Session session = Session.getInstance(prop, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
