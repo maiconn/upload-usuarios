@@ -22,6 +22,7 @@ public class Main {
             System.out.printf("%s - %s - %s", email, nomeUsuario, senha);
             ExecutarSh.executarCriacaoUserJenkins(nomeUsuario, senha, email);
         }
+        scan.close();
     }
 
     private static String gerarSenha() {

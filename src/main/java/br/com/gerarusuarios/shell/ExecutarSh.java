@@ -16,6 +16,6 @@ public class ExecutarSh {
         StreamGobbler streamGobbler =
                 new StreamGobbler(process.getInputStream(), process.getErrorStream(), System.out::println);
         Executors.newSingleThreadExecutor().submit(streamGobbler);
-        int exitCode = process.waitFor();
+//        int exitCode = process.waitFor();
     }
 }
