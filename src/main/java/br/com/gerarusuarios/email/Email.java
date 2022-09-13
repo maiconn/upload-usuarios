@@ -4,9 +4,7 @@ import br.com.gerarusuarios.Main;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -14,7 +12,7 @@ import java.util.Properties;
 
 public class Email {
 
-    public static void enviarEmail(String email, String user, String pass, boolean jenkins, boolean oracle) throws MessagingException, URISyntaxException, IOException {
+    public static void enviarEmail(String email, String user, String pass, boolean jenkins, boolean oracle) throws MessagingException, URISyntaxException, IOException, MessagingException {
         Properties prop = new Properties();
         prop.put("mail.transport.protocol", "smtp");
         prop.put("mail.smtp.auth", true);
@@ -27,7 +25,7 @@ public class Email {
 
         String usuarioEmail = System.getProperty("mail.username");
         String senhaEmail = System.getProperty("mail.pass");
-        System.out.println(usuarioEmail +" "+ senhaEmail);
+        System.out.println(usuarioEmail + " " + senhaEmail);
         Session session = Session.getInstance(prop, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -57,11 +55,7 @@ public class Email {
         htmlContent = htmlContent.replace("{{USUARIO}}", user);
         htmlContent = htmlContent.replace("{{SENHA}}", pass);
 
-
-        MimeBodyPart mimeBodyPart = new MimeBodyPart();
-        mimeBodyPart.setContent(htmlContent, "text/html; charset=utf-8");
-
-        message.setContent(new MimeMultipart(mimeBodyPart));
+        message.setContent(htmlContent, "text/html; charset=utf-8");
 
         Transport.send(message);
     }
