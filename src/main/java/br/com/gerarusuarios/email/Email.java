@@ -1,7 +1,5 @@
 package br.com.gerarusuarios.email;
 
-import br.com.gerarusuarios.Main;
-
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -10,7 +8,7 @@ import javax.mail.internet.MimeMultipart;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Properties;
 
 public class Email {
@@ -39,15 +37,15 @@ public class Email {
                 Message.RecipientType.TO, InternetAddress.parse(email));
         message.setSubject("Credenciais DBC");
 
-        byte[] bytes = Files.readAllBytes(Paths.get(Main.class.getClassLoader().getResource("template.html").toURI()));
-        String htmlContent = new String(bytes);
+        String htmlContent = Files.readString(Path.of(ClassLoader.getSystemResource("template.html").toURI()));
+//        String htmlContent = new String(bytes);
         if (oracle) {
-            htmlContent = htmlContent.replace("{{ORACLE}}", new String(Files.readAllBytes(Paths.get(Main.class.getClassLoader().getResource("oracle.html").toURI()))));
+            htmlContent = htmlContent.replace("{{ORACLE}}", Files.readString(Path.of(ClassLoader.getSystemResource("oracle.html").toURI())));
         } else {
             htmlContent = htmlContent.replace("{{ORACLE}}", "");
         }
         if (jenkins) {
-            htmlContent = htmlContent.replace("{{JENKINS}}", new String(Files.readAllBytes(Paths.get(Main.class.getClassLoader().getResource("jenkins.html").toURI()))));
+            htmlContent = htmlContent.replace("{{JENKINS}}", Files.readString(Path.of(ClassLoader.getSystemResource("jenkins.html").toURI())));
         } else {
             htmlContent = htmlContent.replace("{{JENKINS}}", "");
         }
