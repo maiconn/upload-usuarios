@@ -25,10 +25,14 @@ public class Email {
         prop.put("mail.smtp.timeout", "10000");
         prop.put("mail.smtp.ssl.trust", "*");
 
+        String usuarioEmail = System.getProperty("mail.username");
+        String senhaEmail = System.getProperty("mail.pass");
+        System.out.println(usuarioEmail +" "+ senhaEmail);
         Session session = Session.getInstance(prop, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(System.getProperty("mail.username"), System.getProperty("mail.pass"));
+
+                return new PasswordAuthentication(usuarioEmail, senhaEmail);
             }
         });
 
