@@ -15,6 +15,9 @@ import java.util.Scanner;
 
 public class Main {
 
+    /**
+     * String[] args = $OPCAO $EMAIL $WORKSPACE "ARQUIVO"
+     */
     public static void main(String[] args) throws IOException, InterruptedException, SQLException, MessagingException, URISyntaxException {
         // cria usuario banco
         String opcao = args[0];
@@ -40,8 +43,8 @@ public class Main {
 
             // cria usuarios em lote
         } else if ("--createFile".equals(opcao)) {
-            String workspace = args[1];
-            String arquivo = args[2];
+            String workspace = args[2];
+            String arquivo = args[3];
             File file = new File(workspace + "/" + arquivo);
             Scanner scan = new Scanner(new FileInputStream(file));
             while (scan.hasNext()) {
