@@ -1,14 +1,15 @@
 package br.com.gerarusuarios.email;
 
+import br.com.gerarusuarios.Main;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Properties;
 
 public class Email {
@@ -37,15 +38,15 @@ public class Email {
                 Message.RecipientType.TO, InternetAddress.parse(email));
         message.setSubject("Credenciais DBC");
 
-        String htmlContent = Files.readString(Path.of(ClassLoader.getSystemResource("template.html").toURI()));
+        String htmlContent = readFileToString("template.html");
 //        String htmlContent = new String(bytes);
         if (oracle) {
-            htmlContent = htmlContent.replace("{{ORACLE}}", Files.readString(Path.of(ClassLoader.getSystemResource("oracle.html").toURI())));
+            htmlContent = htmlContent.replace("{{ORACLE}}", readFileToString("oracle.html"));
         } else {
             htmlContent = htmlContent.replace("{{ORACLE}}", "");
         }
         if (jenkins) {
-            htmlContent = htmlContent.replace("{{JENKINS}}", Files.readString(Path.of(ClassLoader.getSystemResource("jenkins.html").toURI())));
+            htmlContent = htmlContent.replace("{{JENKINS}}", readFileToString("jenkins.html"));
         } else {
             htmlContent = htmlContent.replace("{{JENKINS}}", "");
         }
@@ -59,5 +60,11 @@ public class Email {
         message.setContent(new MimeMultipart(mimeBodyPart));
 
         Transport.send(message);
+    }
+
+    private static String readFileToString(String file) throws IOException {
+        try (InputStream inputStream = Main.class.getClassLoader().getResourceAsStream(file)) {
+            return new String(inputStream.readAllBytes());
+        }
     }
 }
