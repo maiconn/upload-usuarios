@@ -31,7 +31,7 @@ public class Main {
     private static String gerarSenha() {
         int length = 12;
         boolean useLetters = true;
-        boolean useNumbers = true;
+        boolean useNumbers = false;
         return RandomStringUtils.random(length, useLetters, useNumbers);
     }
 
