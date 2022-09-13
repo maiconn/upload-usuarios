@@ -1,6 +1,8 @@
 package br.com.gerarusuarios;
 
+import br.com.gerarusuarios.bancodedados.ConexaoComOracle;
 import br.com.gerarusuarios.email.Email;
+import br.com.gerarusuarios.shell.ExecutarSh;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.mail.MessagingException;
@@ -14,20 +16,49 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) throws IOException, InterruptedException, SQLException, MessagingException, URISyntaxException {
-        String workspace = args[0];
-        String arquivo = args[1];
-        File file = new File(workspace + "/" + arquivo);
-        Scanner scan = new Scanner(new FileInputStream(file));
-        while (scan.hasNext()) {
-            String email = scan.nextLine();
-            String nomeUsuario = email.split("@")[0].replace(".", "_");
-            String senha = gerarSenha();
+        // cria usuario banco
+        String opcao = args[0];
+        System.out.println(opcao);
+        if ("--createDB".equals(opcao)) {
+            String email = args[1];
+            String[] credenciais = getCredentials(email);
+            String nomeUsuario = credenciais[0];
+            String senha = credenciais[1];
             System.out.printf("%s - %s - %s\n", email, nomeUsuario, senha);
-            Email.enviarEmail(email, nomeUsuario, senha);
-            //ConexaoComOracle.createSchema(nomeUsuario, senha);
-            //ExecutarSh.executarCriacaoUserJenkins(nomeUsuario, senha, email);
+            ConexaoComOracle.createSchema(nomeUsuario, senha);
+            Email.enviarEmail(email, nomeUsuario, senha, false, true);
+
+            // cria usuario jenkins
+        } else if ("--createJenkins".equals(opcao)) {
+            String email = args[1];
+            String[] credenciais = getCredentials(email);
+            String nomeUsuario = credenciais[0];
+            String senha = credenciais[1];
+            System.out.printf("%s - %s - %s\n", email, nomeUsuario, senha);
+            ExecutarSh.executarCriacaoUserJenkins(nomeUsuario, senha, args[1]);
+            Email.enviarEmail(email, nomeUsuario, senha, true, false);
+
+            // cria usuarios em lote
+        } else if ("--createFile".equals(opcao)) {
+            String workspace = args[1];
+            String arquivo = args[2];
+            File file = new File(workspace + "/" + arquivo);
+            Scanner scan = new Scanner(new FileInputStream(file));
+            while (scan.hasNext()) {
+                String email = scan.nextLine();
+                if (email.trim().equals("")) {
+                    break;
+                }
+                String[] credenciais = getCredentials(email);
+                String nomeUsuario = credenciais[0];
+                String senha = credenciais[1];
+                System.out.printf("%s - %s - %s\n", email, nomeUsuario, senha);
+                ConexaoComOracle.createSchema(nomeUsuario, senha);
+                ExecutarSh.executarCriacaoUserJenkins(nomeUsuario, senha, email);
+                Email.enviarEmail(email, nomeUsuario, senha, true, true);
+            }
+            scan.close();
         }
-        scan.close();
     }
 
     private static String gerarSenha() {
@@ -35,6 +66,12 @@ public class Main {
         boolean useLetters = true;
         boolean useNumbers = false;
         return RandomStringUtils.random(length, useLetters, useNumbers);
+    }
+
+    private static String[] getCredentials(String email) {
+        return new String[]{email.split("@")[0].replace(".", "_"),
+                gerarSenha()
+        };
     }
 
 }

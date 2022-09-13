@@ -15,7 +15,7 @@ import java.util.Properties;
 
 public class Email {
 
-    public static void enviarEmail(String email, String user, String pass) throws MessagingException, URISyntaxException, IOException {
+    public static void enviarEmail(String email, String user, String pass, boolean jenkins, boolean oracle) throws MessagingException, URISyntaxException, IOException {
         Properties prop = new Properties();
         prop.put("mail.transport.protocol", "smtp");
         prop.put("mail.smtp.auth", true);
@@ -41,8 +41,19 @@ public class Email {
 
         byte[] bytes = Files.readAllBytes(Paths.get(Main.class.getClassLoader().getResource("template.html").toURI()));
         String htmlContent = new String(bytes);
+        if (oracle) {
+            htmlContent = htmlContent.replace("{{ORACLE}}", new String(Files.readAllBytes(Paths.get(Main.class.getClassLoader().getResource("oracle.html").toURI()))));
+        } else {
+            htmlContent = htmlContent.replace("{{ORACLE}}", "");
+        }
+        if (jenkins) {
+            htmlContent = htmlContent.replace("{{JENKINS}}", new String(Files.readAllBytes(Paths.get(Main.class.getClassLoader().getResource("jenkins.html").toURI()))));
+        } else {
+            htmlContent = htmlContent.replace("{{JENKINS}}", "");
+        }
         htmlContent = htmlContent.replace("{{USUARIO}}", user);
         htmlContent = htmlContent.replace("{{SENHA}}", pass);
+
 
         MimeBodyPart mimeBodyPart = new MimeBodyPart();
         mimeBodyPart.setContent(htmlContent, "text/html; charset=utf-8");
