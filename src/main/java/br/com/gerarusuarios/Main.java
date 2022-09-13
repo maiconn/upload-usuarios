@@ -5,7 +5,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -14,7 +13,7 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
         String workspace = args[0];
         String arquivo = args[1];
-        File file = new File(workspace + arquivo);
+        File file = new File(workspace + "/" + arquivo);
         Scanner scan = new Scanner(new FileInputStream(file));
         while (scan.hasNextLine()) {
             String email = scan.nextLine();
