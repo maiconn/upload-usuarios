@@ -41,7 +41,6 @@ public class Email {
         message.setSubject("Credenciais DBC");
 
         String htmlContent = readFileToString("template.html");
-//        String htmlContent = new String(bytes);
         if (oracle) {
             htmlContent = htmlContent.replace("{{ORACLE}}", readFileToString("oracle.html"));
         } else {
