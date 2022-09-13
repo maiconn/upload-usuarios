@@ -16,7 +16,7 @@ public class Email {
 
     public static void enviarEmail(String email, String user, String pass, boolean jenkins, boolean oracle) throws MessagingException, URISyntaxException, IOException {
         Properties prop = new Properties();
-//        prop.put("mail.transport.protocol", "smtp");
+        prop.put("mail.transport.protocol", "smtp");
         prop.put("mail.smtp.auth", true);
         prop.put("mail.smtp.starttls.enable", true);
         prop.put("mail.smtp.host", "smtp.dbccompany.com.br");
