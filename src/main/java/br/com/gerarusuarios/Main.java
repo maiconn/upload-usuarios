@@ -64,6 +64,7 @@ public class Main {
                 br.close();
             }
         }
+        System.exit(0);
     }
 
     private static String gerarSenha() {
