@@ -6,12 +6,11 @@ import br.com.gerarusuarios.shell.ExecutarSh;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.mail.MessagingException;
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
-import java.util.Scanner;
 
 public class Main {
 
@@ -45,22 +44,25 @@ public class Main {
         } else if ("--createFile".equals(opcao)) {
             String workspace = args[2];
             String arquivo = args[3];
-            File file = new File(workspace + "/" + arquivo);
-            Scanner scan = new Scanner(new FileInputStream(file));
-            while (scan.hasNext()) {
-                String email = scan.nextLine();
-                if (email.trim().equals("")) {
-                    break;
+            BufferedReader br = new BufferedReader(new FileReader(workspace + "/" + arquivo));
+            try {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String email = line;
+                    if (email.trim().equals("")) {
+                        break;
+                    }
+                    String[] credenciais = getCredentials(email);
+                    String nomeUsuario = credenciais[0];
+                    String senha = credenciais[1];
+                    System.out.printf("%s - %s - %s\n", email, nomeUsuario, senha);
+                    ConexaoComOracle.createSchema(nomeUsuario, senha);
+                    ExecutarSh.executarCriacaoUserJenkins(nomeUsuario, senha, email);
+                    Email.enviarEmail(email, nomeUsuario, senha, true, true);
                 }
-                String[] credenciais = getCredentials(email);
-                String nomeUsuario = credenciais[0];
-                String senha = credenciais[1];
-                System.out.printf("%s - %s - %s\n", email, nomeUsuario, senha);
-                ConexaoComOracle.createSchema(nomeUsuario, senha);
-                ExecutarSh.executarCriacaoUserJenkins(nomeUsuario, senha, email);
-                Email.enviarEmail(email, nomeUsuario, senha, true, true);
+            } finally {
+                br.close();
             }
-            scan.close();
         }
     }
 
