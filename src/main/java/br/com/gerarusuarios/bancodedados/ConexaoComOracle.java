@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class ConexaoComOracle {
     public static void createSchema(String schema, String pass) throws SQLException {
-        Connection con = DriverManager.getConnection("jdbc:oracle:thin:@10.0.20.80:1521/xe", "system", "VemSer@2000!");
+        Connection con = DriverManager.getConnection("jdbc:oracle:thin:@10.0.20.80:1521/xe", System.getProperty("db.user"), System.getProperty("db.pass"));
 
         con.createStatement().executeUpdate("create user " + schema + " identified by " + pass);
         con.createStatement().executeUpdate("GRANT CONNECT TO " + schema);
