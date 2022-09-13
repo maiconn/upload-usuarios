@@ -56,8 +56,8 @@ public class Main {
                 String nomeUsuario = credenciais[0];
                 String senha = credenciais[1];
                 System.out.printf("%s - %s - %s\n", email, nomeUsuario, senha);
-//                ConexaoComOracle.createSchema(nomeUsuario, senha);
-//                ExecutarSh.executarCriacaoUserJenkins(nomeUsuario, senha, email);
+                ConexaoComOracle.createSchema(nomeUsuario, senha);
+                ExecutarSh.executarCriacaoUserJenkins(nomeUsuario, senha, email);
                 Email.enviarEmail(email, nomeUsuario, senha, true, true);
             }
             scan.close();
