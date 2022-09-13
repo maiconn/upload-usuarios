@@ -28,7 +28,7 @@ public class Main {
             String nomeUsuario = credenciais[0];
             String senha = credenciais[1];
             System.out.printf("%s - %s - %s\n", email, nomeUsuario, senha);
-            ConexaoComOracle.createSchema(nomeUsuario, senha);
+            //ConexaoComOracle.createSchema(nomeUsuario, senha);
             Email.enviarEmail(email, nomeUsuario, senha, false, true);
 
             // cria usuario jenkins

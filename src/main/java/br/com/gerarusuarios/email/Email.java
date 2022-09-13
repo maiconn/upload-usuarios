@@ -16,14 +16,14 @@ public class Email {
 
     public static void enviarEmail(String email, String user, String pass, boolean jenkins, boolean oracle) throws MessagingException, URISyntaxException, IOException {
         Properties prop = new Properties();
-        prop.put("mail.transport.protocol", "smtp");
+//        prop.put("mail.transport.protocol", "smtp");
         prop.put("mail.smtp.auth", true);
         prop.put("mail.smtp.starttls.enable", true);
         prop.put("mail.smtp.host", "smtp.dbccompany.com.br");
         prop.put("mail.smtp.port", "587");
         prop.put("mail.smtp.connectiontimeout", "10000");
         prop.put("mail.smtp.timeout", "10000");
-        prop.put("mail.smtp.ssl.trust", "smtp.dbccompany.com.br");
+        prop.put("mail.smtp.ssl.trust", "*");
 
         Session session = Session.getInstance(prop, new Authenticator() {
             @Override
