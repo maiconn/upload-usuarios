@@ -63,6 +63,32 @@ public class Main {
             } finally {
                 br.close();
             }
+            // cria banco de dados e enviar para uma lista de e-mails
+        } else if ("--createTeamDB".equals(opcao)) {
+            String workspace = args[2];
+            String arquivo = args[3];
+            BufferedReader br = new BufferedReader(new FileReader(workspace + "/" + arquivo));
+            try {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String linha = line;
+                    if (linha.trim().equals("")) {
+                        break;
+                    }
+                    String[] split = linha.split(";");
+                    String nomeBase = split[0];
+                    String[] credenciais = getCredentials(nomeBase);
+                    String nomeUsuario = credenciais[0];
+                    String senha = credenciais[1];
+                    System.out.printf("%s - %s - %s\n", linha, nomeUsuario, senha);
+                    ConexaoComOracle.createSchema(nomeUsuario, senha);
+                    for(int i = 1 ; i < split.length ; i++){
+                        Email.enviarEmail(split[i], nomeUsuario, senha, false, true);
+                    }
+                }
+            } finally {
+                br.close();
+            }
         }
         System.exit(0);
     }
